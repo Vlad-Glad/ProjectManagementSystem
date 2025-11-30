@@ -21,6 +21,15 @@ public class EfTaskRepository : ITaskRepository
             .ToList();
     }
 
+    public VTask? GetById(int id)
+    {
+        var p = new SqlParameter("@TaskId", id);
+
+        return _context.VTasks
+            .FromSqlRaw("EXEC dbo.GetTaskById @TaskId", p)
+            .FirstOrDefault();
+    }
+
     // Soft delete через процедуру
     public void SoftDelete(int taskId, int userId)
     {

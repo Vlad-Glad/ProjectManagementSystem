@@ -1,0 +1,27 @@
+﻿@model TaskDetailsViewModel
+
+<h2>@Model.Task.Title</h2>
+
+<h3>Activity (MongoDB)</h3>
+
+@if (Model.Activity?.Events != null && Model.Activity.Events.Any())
+{
+    <ul>
+        @foreach (var ev in Model.Activity.Events.OrderByDescending(e => e.CreatedAt))
+        {
+            <li>
+                <strong>@ev.CreatedAt:</strong> [@ev.Type] User @ev.UserId: @ev.Text
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No activity yet.</p>
+}
+
+<form asp-action="AddComment" method="post">
+    <input type="hidden" name="taskId" value="@Model.Task.Id" />
+    <textarea name="newCommentText" class="form-control"></textarea>
+    <button type="submit" class="btn btn-primary">Add comment</button>
+</form>

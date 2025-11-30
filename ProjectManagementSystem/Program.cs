@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using ProjectManagementSystem;
 using ProjectManagementSystem.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +16,28 @@ builder.Services.AddScoped<IProjectRepository, EfProjectRepository>();
 builder.Services.AddScoped<ITaskRepository, EfTaskRepository>();
 
 builder.Services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+
+
+// Mongo settings
+builder.Services.Configure<MongoSettings>(
+    builder.Configuration.GetSection("MongoSettings"));
+
+// Mongo client
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
+
+// Mongo database
+builder.Services.AddScoped<IMongoDatabase>(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(options.Database);
+});
+
+builder.Services.AddScoped<ITaskActivityRepository, TaskActivityRepository>();
 
 var app = builder.Build();
 

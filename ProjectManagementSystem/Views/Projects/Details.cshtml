@@ -7,13 +7,13 @@
 <p>Planned end: @Model.Project.EndDatePlanned</p>
 
 <h3>Tasks</h3>
-<table>
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Title</th>
             <th>Status</th>
             <th>Priority</th>
-            <th>Due date</th>
+            <th></th> @* колонка під кнопку Details *@
         </tr>
     </thead>
     <tbody>
@@ -23,6 +23,14 @@
                 <td>@task.Title</td>
                 <td>@task.StatusName</td>
                 <td>@task.PriorityName</td>
+                <td>
+                    <a asp-controller="Tasks"
+                       asp-action="Details"
+                       asp-route-id="@task.Id"
+                       class="btn btn-sm btn-primary">
+                        Details
+                    </a>
+                </td>
             </tr>
         }
     </tbody>
