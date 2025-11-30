@@ -27,6 +27,7 @@ public class EfTaskRepository : ITaskRepository
 
         return _context.VTasks
             .FromSqlRaw("EXEC dbo.GetTaskById @TaskId", p)
+            .AsEnumerable()
             .FirstOrDefault();
     }
 
