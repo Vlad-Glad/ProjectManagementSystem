@@ -39,6 +39,9 @@ builder.Services.AddScoped<IMongoDatabase>(sp =>
 
 builder.Services.AddScoped<ITaskActivityRepository, TaskActivityRepository>();
 
+builder.Services.AddScoped<TaskActivitySeeder>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
