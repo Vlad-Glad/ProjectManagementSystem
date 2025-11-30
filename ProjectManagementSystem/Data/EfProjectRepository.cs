@@ -24,9 +24,11 @@ public class EfProjectRepository : IProjectRepository
     {
         var p = new SqlParameter("@ProjectId", id);
 
-        return _context.VProjects
+        var list = _context.VProjects
             .FromSqlRaw("EXEC dbo.GetProjectById @ProjectId", p)
-            .FirstOrDefault();
+            .ToList();
+
+        return list.FirstOrDefault();
     }
 
     // Soft delete через процедуру
