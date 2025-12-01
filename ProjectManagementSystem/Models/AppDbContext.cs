@@ -49,6 +49,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<WorkLog> WorkLogs { get; set; }
 
+    public DbSet<TaskTimelineRow> TaskTimelineRows { get; set; } = null!;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=VladLaptop\\SQLEXPRESS;Database=CorpProjectManagingSystem;Trusted_Connection=True; TrustServerCertificate=True; Encrypt=False ");
@@ -494,6 +496,21 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_WorkLogs_User");
+        });
+
+        modelBuilder.Entity<TaskTimelineRow>(entity =>
+        {
+            entity.HasNoKey();
+            entity.ToView("v_TaskTimeline");
+
+            entity.Property(e => e.EventType).HasColumnName("event_type");
+            entity.Property(e => e.TaskId).HasColumnName("task_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.Text).HasColumnName("text");
+            entity.Property(e => e.Minutes).HasColumnName("minutes");
+            entity.Property(e => e.OldStatusId).HasColumnName("old_status_id");
+            entity.Property(e => e.NewStatusId).HasColumnName("new_status_id");
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at");
         });
 
         OnModelCreatingPartial(modelBuilder);

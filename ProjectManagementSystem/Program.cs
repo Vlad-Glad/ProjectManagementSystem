@@ -41,6 +41,7 @@ builder.Services.AddScoped<ITaskActivityRepository, TaskActivityRepository>();
 
 builder.Services.AddScoped<TaskActivitySeeder>();
 
+builder.Services.AddScoped<PerformanceTester>();
 
 var app = builder.Build();
 
