@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectManagementSystem.Models;
 
 public class ProjectsController : Controller
 {
     private readonly IUnitOfWork _uow;
+    private readonly AppDbContext _context;
 
-    public ProjectsController(IUnitOfWork uow)
+    public ProjectsController(IUnitOfWork uow, AppDbContext context)
     {
         _uow = uow;
+        _context = context;
     }
 
     public IActionResult Index()
@@ -34,7 +37,12 @@ public class ProjectsController : Controller
     [HttpPost]
     public IActionResult SoftDelete(int id)
     {
-        int currentUserId = 1; // тимчасово, для прикладу
+        var ownerId = _context.Projects
+              .Where(p => p.Id == id)
+              .Select(p => (int?)p.OwnerUserId)
+              .FirstOrDefault();
+
+        int currentUserId = ownerId ?? 1;
 
         _uow.BeginTransaction();
         try
